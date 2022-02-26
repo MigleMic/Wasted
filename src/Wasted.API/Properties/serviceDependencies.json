@@ -1,11 +1,12 @@
 {
   "dependencies": {
-    "secrets1": {
-      "type": "secrets"
-    },
-    "mssql1": {
+    "mssql2": {
       "type": "mssql",
-      "connectionId": "WASTED.API"
+      "connectionId": "ConnectionStrings:Wasted.API"
+    },
+    "secrets1": {
+      "type": "secrets",
+      "connectionId": "VaultUri"
     }
   }
 }

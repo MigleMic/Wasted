@@ -43,17 +43,11 @@ namespace Wasted.API
                 {
                     Version = "v1",
                     Title = "Wasted",
-                    Description = "Prayers",
-                    TermsOfService = new Uri("https://www.google.com/"),
+                    Description = "An ASP.NET Core Web API for the Wasted App",
                     Contact = new OpenApiContact
                     {
                         Name = "Contact",
-                        Url = new Uri("https://www.google.com/")
-                    },
-                    License = new OpenApiLicense
-                    {
-                        Name = "License",
-                        Url = new Uri("https://www.google.com/")
+                        Url = new Uri("https://github.com/MigleMic/Wasted")
                     }
                 });
 

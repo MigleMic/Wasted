@@ -13,7 +13,7 @@ namespace Wasted.Data
     public class HttpHelper
     {
         private static readonly HttpClient client = new HttpClient();
-        private static readonly string ApiUrl = "http://localhost:3000/api/";
+        private static readonly string ApiUrl = "https://wastedapi.azurewebsites.net/api/";
 
         public async Task<int> Post<T>(T data, string endpoint)
         {

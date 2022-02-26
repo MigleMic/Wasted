@@ -10,7 +10,7 @@
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/WastedAPIvault",
       "type": "secrets.keyVault",
       "connectionId": "VaultUri",
-      "secretStore": null
+      "secretStore": "AzureAppSettings"
     }
   }
 }
