@@ -1,16 +1,47 @@
 {
   "dependencies": {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< HEAD
     "secrets1": {
       "type": "secrets",
       "connectionId": "",
       "suggestion": "true",
       "ignored": "true"
     },
-    "mssql1": {
+=======
+>>>>>>> parent of 4588500 (help)
+    "mssql2": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/wasted/databases/Wasted",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:Wasted.API",
+<<<<<<< Updated upstream
+=======
+=======
+>>>>>>> parent of 4588500 (help)
+    "mssql2": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/wasted/databases/Wasted",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:Wasted.API",
+      "secretStore": "AzureKeyVault"
+    },
+    "secrets1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/WastedAPIvault",
+      "type": "secrets.keyVault",
+      "connectionId": "VaultUri",
+<<<<<<< HEAD
+<<<<<<< HEAD
+>>>>>>> parent of 4588500 (help)
       "secretStore": "AzureAppSettings"
+=======
+      "secretStore": null
+>>>>>>> Stashed changes
+=======
+      "secretStore": "AzureAppSettings"
+>>>>>>> parent of 4588500 (help)
+=======
+      "secretStore": "AzureAppSettings"
+>>>>>>> parent of 4588500 (help)
     }
   }
 }

@@ -1,8 +1,29 @@
 {
   "dependencies": {
+<<<<<<< HEAD
+<<<<<<< HEAD
+<<<<<<< Updated upstream
+<<<<<<< HEAD
     "mssql1": {
+=======
+    "mssql2": {
+>>>>>>> parent of 4588500 (help)
+=======
+    "secrets1": {
+      "type": "secrets"
+    },
+=======
+>>>>>>> parent of 4588500 (help)
+=======
+>>>>>>> parent of 4588500 (help)
+    "mssql2": {
+>>>>>>> Stashed changes
       "type": "mssql",
       "connectionId": "ConnectionStrings:Wasted.API"
+    },
+    "secrets1": {
+      "type": "secrets",
+      "connectionId": "VaultUri"
     }
   }
 }
