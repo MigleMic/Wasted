@@ -1,45 +1,16 @@
 {
   "dependencies": {
-<<<<<<< HEAD
-<<<<<<< HEAD
-<<<<<<< HEAD
-    "secrets1": {
-<<<<<<< Updated upstream
-      "type": "secrets",
-      "connectionId": "",
-      "suggestion": "true",
-      "ignored": "true"
-=======
-=======
-      "type": "secrets.user"
-    },
->>>>>>> Stashed changes
-=======
->>>>>>> parent of 4588500 (help)
-=======
->>>>>>> parent of 4588500 (help)
-    "mssql2": {
-      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/wasted/databases/Wasted",
-      "type": "mssql.azure",
-      "connectionId": "ConnectionStrings:Wasted.API",
-<<<<<<< Updated upstream
-      "secretStore": "AzureKeyVault"
-    },
     "secrets1": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.KeyVault/vaults/WastedAPIvault",
       "type": "secrets.keyVault",
       "connectionId": "VaultUri",
-      "secretStore": null
-<<<<<<< HEAD
-<<<<<<< HEAD
->>>>>>> parent of 4588500 (help)
-=======
       "secretStore": "LocalSecretsFile"
->>>>>>> Stashed changes
-=======
->>>>>>> parent of 4588500 (help)
-=======
->>>>>>> parent of 4588500 (help)
+    },
+    "mssql1": {
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/wasted/databases/Wasted",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:Wasted.API",
+      "secretStore": "LocalSecretsFile"
     }
   }
 }
