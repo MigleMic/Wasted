@@ -16,7 +16,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "VaultUri": "https://wastedapivault.vault.azure.net/",
-        "AZURE_USERNAME": "urtegrabliauskaite@gmail.com"
+        "AZURE_USERNAME": "rokas.lekecinskas@mif.stud.vu.lt"
       }
     },
     "Wasted.API": {
@@ -27,7 +27,7 @@
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development",
         "VaultUri": "https://wastedapivault.vault.azure.net/",
-        "AZURE_USERNAME": "urtegrabliauskaite@gmail.com"
+        "AZURE_USERNAME": "rokas.lekecinskas@mif.stud.vu.lt"
       }
     }
   }
