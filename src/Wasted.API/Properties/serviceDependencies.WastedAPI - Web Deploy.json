@@ -1,10 +1,16 @@
 {
   "dependencies": {
-    "mssql2": {
+    "secrets1": {
+      "type": "secrets",
+      "connectionId": "",
+      "suggestion": "true",
+      "ignored": "true"
+    },
+    "mssql1": {
       "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourceGroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/wasted/databases/Wasted",
       "type": "mssql.azure",
       "connectionId": "ConnectionStrings:Wasted.API",
-      "secretStore": "AzureKeyVault"
+      "secretStore": "AzureAppSettings"
     }
   }
 }
