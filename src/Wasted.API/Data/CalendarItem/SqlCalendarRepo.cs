@@ -40,9 +40,9 @@ namespace Wasted.API.Data
             return _context.CalendarItems.FirstOrDefault(p => p.ProductId == productId && p.UserId == userId);
         }
 
-        public IEnumerable<CalendarItem> GetCalendarItemList()
+        public IEnumerable<CalendarItem> GetCalendarItemList(int userId)
         {
-            return _context.CalendarItems.ToList();
+            return _context.CalendarItems.Where(item => item.UserId == userId).ToList();
         }
 
         public bool SaveChanges()

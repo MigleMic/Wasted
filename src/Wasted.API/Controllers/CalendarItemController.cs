@@ -29,9 +29,9 @@ namespace Wasted.API.Controllers
 
         //GET api/calendarItem{userId}
         [HttpGet("{userId}")]
-        public ActionResult <IEnumerable<CalendarItemWEB>> GetCalendarItemList()
+        public ActionResult <IEnumerable<CalendarItemWEB>> GetCalendarItemList(int userId)
         {
-            var calendarItems = _repository.GetCalendarItemList();
+            var calendarItems = _repository.GetCalendarItemList(userId);
             var products = _productRepository.GetProductList();
             var dishes = _dishRepository.GetDishList();
             var calendarItemWEBList = new List<CalendarItemWEB>();
