@@ -15,6 +15,7 @@ namespace Wasted.API.Data
         public DbSet<User> Users { get; set; }
         public DbSet<Tip> Tips { get; set; }
         public DbSet<FridgeItem> FridgeItems { get; set; }
+        public DbSet<CalendarItem> CalendarItems { get; set; }
 
         
 
@@ -108,6 +109,9 @@ namespace Wasted.API.Data
               );
             modelBuilder.Entity<FridgeItem>().HasKey(
                 o => new { o.UserId, o.ProductId}
+            );
+            modelBuilder.Entity<CalendarItem>().HasKey(
+                o => new { o.UserId, o.ProductId }
             );
         }
     }

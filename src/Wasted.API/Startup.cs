@@ -78,6 +78,7 @@ namespace Wasted.API
             services.AddScoped<IIngredientRepo, SqlIngredientRepo>();
             services.AddScoped<IDishRepo, SqlDishRepo>();
             services.AddScoped<ITipRepo, SqlTipRepo>();
+            services.AddScoped<ICalendarRepo, SqlCalendarRepo>();
 
         }
 
