@@ -1,0 +1,126 @@
+﻿@page "/calendar/{email}"
+
+@using Wasted.Data
+@using Wasted.WEB.Wrapped
+@inject ProductService ProductService
+@inject ExportService exportService
+@inject Microsoft.JSInterop.IJSRuntime JS
+@using Microsoft.AspNetCore.Components.Authorization
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@using  System.IO
+@inject Admins Admins
+@inject RegistrationService RegistrationService
+@inject CalendarService CalendarService
+
+<AuthorizeView>
+    <Authorized>
+        <h1>Your Calendar</h1>
+
+
+        @if(calendarItems == null)
+        {
+            <p>Loading....</p>
+        }
+        else
+        {
+
+            <div class="form-group">
+                <input class="form-control" type="text" placeholder="Filter..."
+                    @bind="Filter"
+                    @bind:event="oninput">
+            </div>
+            <table class="table table-striped">
+                <thead class="thead-light">
+                    <tr>
+                        <th scope="col">Day</th>
+                        <th scope="col">Time</th>
+                        <th scope="col">Product</th>
+                        <th scope="col">Quantity</th>
+                        <th scope="col">Energy Value</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @{
+                        foreach (var calendarItem in calendarItems)
+                        {
+                            if (!IsVisible(calendarItem))
+                                continue;
+                            <tr>
+                                <td>@calendarItem.Day</td>
+                                <td>@calendarItem.Time</td>
+                                <td>@calendarItem.Product</td>
+                                <td>@calendarItem.Quantity</td>
+                                <td>@calendarItem.EnergyValue</td>
+                               
+                            </tr>
+                        }
+                    }
+                    
+                </tbody>
+            </table>
+            <h3>Add products</h3>
+                <div class="row g-3 mg-50">
+                    <select @bind="newCalendarItem.ProductId">
+                        @foreach (var product in products)
+                        {
+                            <option value="@product.Id">@product.Name (@product.MeasurementUnits)</option>
+                        }
+                    </select>
+                    <div class="col">
+                        <input type="date" class="form-control" placeholder="Day" aria-label="Day"  @bind="@newDate">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Time" aria-label="Time"  @bind="@newCalendarItem.Time">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="Quantity" aria-label="Quantity"  @bind="@newCalendarItem.Quantity">
+                    </div>
+                    <div class="col">
+                        <input type="text" class="form-control" placeholder="EnergyValue" aria-label="EnergyValue"  @bind="@newCalendarItem.EnergyValue">
+                    </div>
+                    <div class="col">
+                        <button type="submit" class="btn btn-success" @onclick="async () => await addFridgeItem()">Add</button>
+                    </div>
+                </div>
+        }
+    </Authorized>
+</AuthorizeView>
+@code {
+    [Parameter]
+    public string Email { get; set; }
+    private int UserId { get; set; } 
+    public string Filter { get; set; }
+    public List<CalendarItem> calendarItems { get; set; }
+    private List<Product> products { get; set; }
+    private DateTime newDate { get; set; }
+
+    public CalendarItem newCalendarItem = new CalendarItem();
+    public static PagedResponse<List<Product>> response {get; set;}
+
+    public bool IsVisible(CalendarItem Item)
+    {
+    return  string.IsNullOrEmpty(Filter) ||
+    Item.Name.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+    Item.Type.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+
+    }
+    protected override async Task OnInitializedAsync()
+    {
+    response = await ProductService.GetResponse();
+    UserId = await RegistrationService.GetUserId(Email);
+    calendarItems = (await CalendarService.GetCalendarItemsUser(UserId));
+    products = (await ProductService.GetAllProducts(response.TotalRecords)).OrderBy(x => x.Name).ToList();
+    newDate = DateTime.Now;
+    }
+    public async Task addCalendarItem()
+    {
+    newCalendarItem.Date= newDate.ToShortDateString();
+    await CalendarService.AddCalendarItem(UserId, newCalendarItem);
+    CalendarItems = await CalendarService.GetCalendarItemsUser(UserId);
+    newCalendarItem = new CalendarItem();
+    newDate = DateTime.Now;
+    }
+
+   
+    }
