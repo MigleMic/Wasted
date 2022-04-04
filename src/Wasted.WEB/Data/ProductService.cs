@@ -143,6 +143,18 @@ namespace Wasted.Data
 
             return types;
         }
+        public List<Product> GetEdibleProducts(List<Product> products)
+        {
+            List<Product> edible = new List<Product>();
+            foreach (var product in products)
+            {
+                if (product.Type == "Berry" || product.Type == "Candy" || product.Type == "Fruit")
+                {
+                    edible.Add(product);
+                }
+            }
+            return edible;
+        }
 
         public async void  ApproveProduct (List<Product> allProducts, Product newProduct, int nr)
         {

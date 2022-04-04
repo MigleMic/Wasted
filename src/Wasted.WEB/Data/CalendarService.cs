@@ -64,18 +64,40 @@ namespace Wasted.Data
             } while (CalendarFile.ReadLine() != null);
         }
 
-        public void AddCalendarItem(int userId, CalendarItem calendarItem)
+        public void AddCalendarItem(int userId, CalendarItem calendarItem, List<Product> allProdcuts)
         {
             List<CalendarItem> allItems = GetCalendarItems();
+            foreach (var product in allProdcuts)
+            {
+                if(product.Id == calendarItem.ProductId)
+                {
+                    calendarItem.ProductName = product.Name;
+                    calendarItem.EnergyValue = (int)product.EnergyValue;
+                }
+            }
             try
             {
                 allItems.Add(calendarItem);
-                string json = JsonConvert.SerializeObject(allItems, Formatting.Indented);
-                File.WriteAllText("CalendarItems.json", json);
+                writeToJson("CalendarItems.json", allItems);
             }
             catch (Exception e)
             {
                 Log.Error("Exception caught {0}", e);
+            }
+        }
+
+        public void writeToJson(string file, List<CalendarItem> calendarItems)
+        {
+            try
+            {
+                Log.Information("Starting writing to CalendarItems.json");
+                string json = JsonConvert.SerializeObject(calendarItems, Formatting.Indented);
+                File.WriteAllText(file, json);
+                Log.Information("Finished writing to CalendarItems.json");
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught when writing to CalendarItems {0}", e);
             }
         }
 
