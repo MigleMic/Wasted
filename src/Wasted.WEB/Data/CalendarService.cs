@@ -9,11 +9,11 @@ using System.Threading.Tasks;
 
 namespace Wasted.Data
 {
-    public class CalendarItemService
+    public class CalendarService
     {
         private readonly JsonFileService _jsonFileService;
 
-        public CalendarItemService(JsonFileService jsonFileService)
+        public CalendarService(JsonFileService jsonFileService)
         {
             _jsonFileService = jsonFileService;
         }

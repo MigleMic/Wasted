@@ -49,7 +49,7 @@ namespace Wasted
             services.AddSingleton<AdminService>();
             services.AddSingleton<FridgeService>();
             services.AddSingleton<AddRecipeService>();
-            services.AddSingleton<CalendarItemService>();
+            services.AddSingleton<CalendarService>();
 
         }
 

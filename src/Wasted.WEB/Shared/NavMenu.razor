@@ -9,78 +9,90 @@
 
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
-        <a class="navbar-brand" href="#"><img class="logo"src="images/myimgsmall.png" alt="earth"></a>
-  
+    <a class="navbar-brand" href="#"><img class="logo" src="images/myimgsmall.png" alt="earth"></a>
 
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
+
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
             <AuthorizeView>
-          
-              <NotAuthorized>
 
-                  <li class="nav-item px-3">
-                  <a class="nav-link dropdown-toggle" @onclick="()=>expandSubNav = !expandSubNav" >
-                      <span class="oi oi-person" data-icon="bx:bx-user-circle"></span> User
-                  </a>
-                  @if (expandSubNav)
-                  {
-                      <NavLink class="expand-menu" href="registration">
-                          <span class="oi oi-plus" aria-hidden="true"></span>Sing up
-                      </NavLink>
-                      <NavLink class="" href="signIn">
-                          <span class="oi oi-lock-locked" aria-hidden="true"></span>Sing in
-                      </NavLink>
-                  }
-              </li>
+                <NotAuthorized>
 
-              </NotAuthorized>
+                    <li class="nav-item px-3">
+                        <a class="nav-link dropdown-toggle" @onclick="()=>expandSubNav = !expandSubNav">
+                            <span class="oi oi-person" data-icon="bx:bx-user-circle"></span> User
+                        </a>
+                        @if (expandSubNav)
+                        {
+                            <NavLink class="expand-menu" href="registration">
+                                <span class="oi oi-plus" aria-hidden="true"></span>Sing up
+                            </NavLink>
+                            <NavLink class="" href="signIn">
+                                <span class="oi oi-lock-locked" aria-hidden="true"></span>Sing in
+                            </NavLink>
+                        }
+                    </li>
 
-              <Authorized>
-                  <li class="nav-item">
-                  <a class="nav-link" href="tips">Tips </a>
-              </li>
+                </NotAuthorized>
 
-              <li class="nav-item">
-              <a class="nav-link" href="productList">Product List</a>
-              </li>
+                <Authorized>
+                    <li class="nav-item">
+                        <a class="nav-link" href="tips">Tips </a>
+                    </li>
 
-              <li class="nav-item ">
-                  <a class="nav-link" href="recipecalc">Recipe calculator<span class="sr-only">(current)</span></a>
-              </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="productList">Product List</a>
+                    </li>
 
-               @if(Admins.IsAdmin(context.User.Claims))
-               {
-                   <li class="nav-item">
-                      <a class="nav-link" href="admin">Admin page </a>
-                   </li>
+                    <li class="nav-item ">
+                        <a class="nav-link" href="recipecalc">
+                            Recipe calculator<span class="sr-only">(current)</span>
+                        </a>
+                    </li>
 
-                  @* <li class="nav-item">
-                      <a class="nav-link" href="addrecipe">Add Recipe</a>
-                  </li> *@
-               }
-                <li class="nav-item ">
-                <a class="nav-link" href="fridge/@context.User.Identity.Name">My fridge</a>
-                </li>
+                    @if (Admins.IsAdmin(context.User.Claims))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" href="admin">Admin page </a>
+                        </li>
 
-                  <li class="nav-item">
-                      <a class="nav-link" href="calendar/@context.User.Identity.Name">Calendar</a>
-                  </li>
-               
-                          
-                  <form class="nav-item">
-                      <a class="nav-link" href="" @onclick="()=>((CustomAuthStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut()">Log Out<span class="sr-only"></span></a>
-                  </form>
-              </Authorized>
+                        @* <li class="nav-item">
+            <a class="nav-link" href="addrecipe">Add Recipe</a>
+            </li> *@
+                    }
+                    <li class="nav-item ">
+                        <a class="nav-link" href="fridge/@context.User.Identity.Name">My fridge</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="counter">Counter</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="fake">Not found</a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link" href="calendar/@context.User.Identity.Name">Calendar</a>
+                    </li>
+
+
+                    <form class="nav-item">
+                        <a class="nav-link" href=""
+                           @onclick="()=>((CustomAuthStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut()">Log Out<span class="sr-only"></span>
+                        </a>
+                    </form>
+                </Authorized>
             </AuthorizeView>
-            </ul>
-        </div>
+        </ul>
+    </div>
 </nav>
 
 @code
 {
     [CascadingParameter]
     private Task<AuthenticationState> authenticationStateTask { get; set; }
-  
+
     private void LogOut()
     {
         ((CustomAuthStateProvider)AuthenticationStateProvider).MarkUserAsLoggedOut();
@@ -90,10 +102,10 @@
     public bool expandSubNav = false;
     @* private bool collapseNavMenu = true;
 
-    private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+        private string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
-    private void ToggleNavMenu()
-    {
+        private void ToggleNavMenu()
+        {
         collapseNavMenu = !collapseNavMenu;
-    } *@
+        } *@
 }
