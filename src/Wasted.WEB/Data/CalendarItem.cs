@@ -14,6 +14,6 @@ namespace Wasted.Data
         public int Quantity { get; set; }
         public float EnergyValue { get; set; }
         public string Day { get; set; }
-        public int Time { get; set; }
+        public string Time { get; set; }
     }
 }

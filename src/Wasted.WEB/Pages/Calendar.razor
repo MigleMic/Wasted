@@ -11,6 +11,7 @@
 @inject Admins Admins
 @inject RegistrationService RegistrationService
 @inject CalendarService CalendarService
+@inject RecipeCalcService RecipeCalcService
 
 <AuthorizeView>
     <Authorized>
@@ -19,68 +20,75 @@
 
         @if (calendarItems == null)
         {
-            <p>Loading....</p>
+        <p>Loading....</p>
         }
         else
         {
 
-            <div class="form-group">
-                <input class="form-control" type="text" placeholder="Filter..."
-                       @bind="Filter"
-                       @bind:event="oninput">
-            </div>
-            <table class="table table-striped">
-                <thead class="thead-light">
-                    <tr>
-                        <th scope="col">Day</th>
-                        <th scope="col">Time</th>
-                        <th scope="col">Product</th>
-                        <th scope="col">Quantity</th>
-                        <th scope="col">Energy Value</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @{
+        <div class="form-group">
+            <input class="form-control" type="text" placeholder="Filter..."
+                   @bind="Filter"
+                   @bind:event="oninput">
+        </div>
+        <table class="table table-striped">
+            <thead class="thead-light">
+                <tr>
+                    <th scope="col">Day</th>
+                    <th scope="col">Time</th>
+                    <th scope="col">Product</th>
+                    <th scope="col">Quantity</th>
+                    <th scope="col">Energy Value</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @{
                         foreach (var calendarItem in calendarItems)
                         {
                             if (!IsVisible(calendarItem))
                                 continue;
-                            <tr>
-                                <td>@calendarItem.Day</td>
-                                <td>@calendarItem.Time</td>
-                                <td>@calendarItem.ProductName</td>
-                                <td>@calendarItem.Quantity</td>
-                                <td>@calendarItem.EnergyValue</td>
+                    <tr>
+                        <td>@calendarItem.Day</td>
+                        <td>@calendarItem.Time</td>
+                        <td>@calendarItem.ProductName</td>
+                        <td>@calendarItem.Quantity</td>
+                        <td>@calendarItem.EnergyValue</td>
 
-                            </tr>
+                    </tr>
                         }
-                    }
+                }
 
-                </tbody>
-            </table>
-            <h3>Add products</h3>
-            <div class="row g-3 mg-50">
-                <div class="col">
-                    <input type="date" class="form-control" placeholder="Day" aria-label="Day" @bind="@newDate">
-                </div>
-                <div class="col">
-                    <input type="text" class="form-control" placeholder="Time" aria-label="Time" @bind="@newCalendarItem.Time">
-                </div>
-                <select @bind="newCalendarItem.ProductId">
-                    @foreach (var product in products)
-                    {
-                        <option value="@product.Id">@product.Name (@product.MeasurementUnits)</option>
-                    }
-                </select>
-                <div class="col">
-                    <input type="text" class="form-control" placeholder="Quantity" aria-label="Quantity" @bind="@newCalendarItem.Quantity">
-                </div>
-                
-                <div class="col">
-                    <button type="submit" class="btn btn-success" @onclick="async () => await addCalendarItem()">Add</button>
-                </div>
+            </tbody>
+        </table>
+        <h3>Add products</h3>
+        <div class="row g-3 mg-50">
+            <div class="col">
+                <input type="date" class="form-control" placeholder="Day" aria-label="Day" @bind="@newDate">
             </div>
+            <select @bind="newCalendarItem.Time">
+                <option value="">Select time</option>
+                <option value="1">Breakfast</option>
+                <option value="2">Lunch</option>
+                <option value="3">Dinner</option>
+            </select>
+            <select @bind="newCalendarItem.ProductId">
+                @foreach (var product in products)
+                    {
+                <option value="@product.Id">@product.Name </option>
+                    }
+                @foreach(var dish in dishes)
+                    {
+                <option value="@dish.Id"> @dish.Name</option>
+                    }
+            </select>
+            <div class="col">
+                <input type="text" class="form-control" placeholder="Quantity" aria-label="Quantity" @bind="@newCalendarItem.Quantity">
+            </div>
+
+            <div class="col">
+                <button type="submit" class="btn btn-success" @onclick="async () => await addCalendarItem()">Add</button>
+            </div>
+        </div>
         }
     </Authorized>
 </AuthorizeView>
@@ -89,16 +97,20 @@
     public string Email { get; set; }
     private int UserId { get; set; }
     public string Filter { get; set; }
-    public List<CalendarItem> calendarItems { get; set; }
-    private List<Product> products { get; set; }
-    private List<Product> allproducts { get; set; }
+    public List<CalendarItem>
+    calendarItems { get; set; }
+    private List<Product>
+        products { get; set; }
+        private List<Product>
+            allproducts { get; set; }
+            private List<DishModel>
+                dishes {get; set;}
 
-    private DateTime newDate { get; set; }
-    public string productName;
+                private DateTime newDate { get; set; }
+                public string productName;
 
-    public CalendarItem newCalendarItem = new CalendarItem();
-    public static PagedResponse<List<Product>
-    > response { get; set; }
+                public CalendarItem newCalendarItem = new CalendarItem();
+                public static PagedResponse<List<Product>> response { get; set; }
 
     public bool IsVisible(CalendarItem Item)
     {
@@ -112,12 +124,13 @@
     calendarItems = (CalendarService.GetCalendarItemsUser(UserId));
     allproducts = (await ProductService.GetAllProducts(response.TotalRecords));
     products = ProductService.GetEdibleProducts(allproducts);
+    dishes = await RecipeCalcService.GetRecipes();
     newDate = DateTime.Now;
     }
     public async Task addCalendarItem()
     {
     newCalendarItem.Day = newDate.ToShortDateString();
-    CalendarService.AddCalendarItem(UserId, newCalendarItem, products);
+    CalendarService.AddCalendarItem(UserId, newCalendarItem, products, dishes);
     calendarItems = CalendarService.GetCalendarItemsUser(UserId);
     newCalendarItem = new CalendarItem();
     newDate = DateTime.Now;

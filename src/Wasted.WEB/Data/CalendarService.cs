@@ -21,7 +21,7 @@ namespace Wasted.Data
         public List<CalendarItem> GetCalendarItems()
         {
             var calendarItems = new List<CalendarItem>();
-            var path = "CalendarItems.json";
+            var path = "CalendarsItems.json";
             try
             {
                 calendarItems = JsonConvert.DeserializeObject<List<CalendarItem>>(_jsonFileService.ReadJsonFromFile(path));
@@ -47,26 +47,10 @@ namespace Wasted.Data
             return usersCalendar;
         }
 
-        public void ReadCalendarItem(List<CalendarItem> calendarItems)
-        {
-            System.IO.StreamReader CalendarFile = new System.IO.StreamReader(@"CalendarItems.txt");
-            //calendarItems.Clear();
-            do
-            {
-                int userId = Int32.Parse(CalendarFile.ReadLine());
-                int productId = Int32.Parse(CalendarFile.ReadLine());
-                string productName = CalendarFile.ReadLine();
-                int quantity = Int32.Parse(CalendarFile.ReadLine());
-                int energyValue = Int32.Parse(CalendarFile.ReadLine());
-                string day = CalendarFile.ReadLine();
-                int time = Int32.Parse(CalendarFile.ReadLine());
-                calendarItems.Add(new CalendarItem() { UserId = userId, ProductId = productId, ProductName = productName, Quantity = quantity, EnergyValue = energyValue, Day = day, Time = time });
-            } while (CalendarFile.ReadLine() != null);
-        }
-
-        public void AddCalendarItem(int userId, CalendarItem calendarItem, List<Product> allProdcuts)
+        public void AddCalendarItem(int userId, CalendarItem calendarItem, List<Product> allProdcuts, List<DishModel> dishes)
         {
             List<CalendarItem> allItems = GetCalendarItems();
+            calendarItem.UserId = userId;
             foreach (var product in allProdcuts)
             {
                 if(product.Id == calendarItem.ProductId)
@@ -75,10 +59,31 @@ namespace Wasted.Data
                     calendarItem.EnergyValue = (int)product.EnergyValue;
                 }
             }
+            foreach(var dish in dishes)
+            {
+                if(dish.Id == calendarItem.ProductId)
+                {
+                    calendarItem.ProductName = dish.Name;
+                    calendarItem.EnergyValue = 2000;
+                }
+            }
+            if(calendarItem.Time == "1")
+            {
+                calendarItem.Time = "Breakfast";
+            }
+            if(calendarItem.Time == "2")
+            {
+                calendarItem.Time = "Lunch";
+            }
+            else
+            {
+                calendarItem.Time = "Dinner";
+            }
+
             try
             {
                 allItems.Add(calendarItem);
-                writeToJson("CalendarItems.json", allItems);
+                writeToJson("CalendarsItems.json", allItems);
             }
             catch (Exception e)
             {
@@ -103,7 +108,7 @@ namespace Wasted.Data
 
         public Task<List<CalendarItem>> SaveCalendarItems(List<CalendarItem> allItems)
         {
-            var filePath = "CalendarItems.json";
+            var filePath = "CalendarsItems.json";
             try
             {
                 Log.Information("Starting writing Calendar");
