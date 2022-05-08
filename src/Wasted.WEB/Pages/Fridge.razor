@@ -2,6 +2,7 @@
 
 @using Wasted.Data
 @using Wasted.WEB.Wrapped
+@inject RecipeCalcService RecipeCalcService
 @inject ProductService ProductService
 @inject ExportService exportService
 @inject Microsoft.JSInterop.IJSRuntime JS
@@ -52,7 +53,9 @@
                                 <td>@fridgeItem.Date</td>
                                 <td>
                                     <button class="btn btn-danger"
-                                @onclick="() => deleteFridgeItem(fridgeItem.ProductId)">Delete</button>
+                                            @onclick="() => deleteFridgeItem(fridgeItem.ProductId)">
+                                        Delete
+                                    </button>
                                 </td>
                             </tr>
                         }
@@ -70,18 +73,42 @@
                 </select>
                 <div class="col">
                     <input type="date" class="form-control" placeholder="Expiration date" aria-label="Expiration date"
-                    @bind="@newDate">
+                           @bind="@newDate">
                 </div>
                 <div class="col">
                     <input type="text" class="form-control" placeholder="Amount" aria-label="Amount"
-                    @bind="@newFridgeItem.Amount">
+                           @bind="@newFridgeItem.Amount">
                 </div>
                 <div class="col">
                     <button type="submit" class="btn btn-success" @onclick="async () => await addFridgeItem()">Add</button>
                 </div>
             </div>
-        }
-    </Authorized>
+
+            <h3>Add meals</h3>
+            <div class="row g-3 mg-50">
+                <select @bind="newFridgeItem.ProductId">
+                    @foreach (var dish in dishes)
+                    {
+                        <option value="@dish.Id">@dish.Name </option>
+                    }
+                </select>
+                <div class="col">
+                    <input type="date" class="form-control" placeholder="Expiration date" aria-label="Expiration date"
+                           @bind="@newDate">
+                </div>
+                <div class="col">
+                    <input type="text" class="form-control" placeholder="Amount" aria-label="Amount"
+                           @bind="@newFridgeItem.Amount">
+                </div>
+                <div class="col">
+                    <button type="submit" class="btn btn-success" @onclick="async () => await addFridgeItem()">Add</button>
+                </div>
+                </div>
+                }
+
+
+
+        </Authorized>
 </AuthorizeView>
 @code {
     [Parameter]
@@ -91,7 +118,7 @@
     public List<FridgeItem> fridgeItems { get; set; }
     private List<Product> products { get; set; }
     private DateTime newDate { get; set; }
-
+    private List<DishModel> dishes {get; set;}
     public FridgeItem newFridgeItem = new FridgeItem();
     public static PagedResponse<List<Product>> response { get; set; }
 
@@ -108,6 +135,7 @@
         UserId = await RegistrationService.GetUserId(Email);
         fridgeItems = (await FridgeService.GetFridgeItems(UserId)).OrderBy(o => o.Date).ToList();
         products = (await ProductService.GetAllProducts(response.TotalRecords)).OrderBy(x => x.Name).ToList();
+        dishes = await RecipeCalcService.GetRecipes();
         newDate = DateTime.Now;
     }
     public async Task addFridgeItem()

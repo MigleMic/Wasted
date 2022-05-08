@@ -59,5 +59,21 @@ namespace Wasted.Data
                 Log.Error("Exception caught: {0}",e);
             }
         }
+
+        public async Task<List<FridgeItem>> GetFridgeItemForCalendar(int userId)
+        {
+            List<FridgeItem> items = await GetFridgeItems(userId);
+            List<FridgeItem> calendarItems = new List<FridgeItem>();
+            foreach(var products in items)
+            {
+                if (products.Type == "Berry" || products.Type == "Candy" || products.Type == "Drink" ||
+                    products.Type == "Fruit" || products.Type == "Dish")
+                {
+                    calendarItems.Add(products);
+                }
+            }
+            return calendarItems;
+        }
+
     }
 }

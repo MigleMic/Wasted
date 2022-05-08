@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Wasted.Data;
 
 namespace Wasted.Data
 {
@@ -47,11 +48,11 @@ namespace Wasted.Data
             return usersCalendar;
         }
 
-        public void AddCalendarItem(int userId, CalendarItem calendarItem, List<Product> allProdcuts, List<DishModel> dishes)
+        public void AddCalendarItem(int userId, CalendarItem calendarItem, List<Product> edible, List<DishModel> dishes)
         {
             List<CalendarItem> allItems = GetCalendarItems();
             calendarItem.UserId = userId;
-            foreach (var product in allProdcuts)
+            foreach (var product in edible)
             {
                 if(product.Id == calendarItem.ProductId)
                 {
@@ -59,7 +60,8 @@ namespace Wasted.Data
                     calendarItem.EnergyValue = (int)product.EnergyValue;
                 }
             }
-            foreach(var dish in dishes)
+
+            foreach (var dish in dishes)
             {
                 if(dish.Id == calendarItem.ProductId)
                 {
@@ -91,6 +93,21 @@ namespace Wasted.Data
             }
         }
 
+        public void DeleteCalendarItem(int userId, int productId, string day, string time)
+        {
+            List<CalendarItem> allItems = GetCalendarItems();
+      
+            try 
+            {
+                allItems.RemoveAll(item => item.ProductId == productId && item.UserId == userId && item.Day == day && item.Time == time);
+                writeToJson("CalendarsItems.json", allItems);
+            }
+            catch (Exception e)
+            {
+                Log.Error("Exception caught {0}", e);
+            }
+        }
+
         public void writeToJson(string file, List<CalendarItem> calendarItems)
         {
             try
@@ -105,6 +122,8 @@ namespace Wasted.Data
                 Log.Error("Exception caught when writing to CalendarItems {0}", e);
             }
         }
+
+        
 
         public Task<List<CalendarItem>> SaveCalendarItems(List<CalendarItem> allItems)
         {

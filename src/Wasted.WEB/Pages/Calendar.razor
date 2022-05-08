@@ -3,6 +3,7 @@
 @using Wasted.Data
 @using Wasted.WEB.Wrapped
 @inject ProductService ProductService
+@inject FridgeService FridgeService
 @inject ExportService exportService
 @inject Microsoft.JSInterop.IJSRuntime JS
 @using Microsoft.AspNetCore.Components.Authorization
@@ -38,6 +39,7 @@
                     <th scope="col">Product</th>
                     <th scope="col">Quantity</th>
                     <th scope="col">Energy Value</th>
+                    <th scope="col">Delete from Calendar</th>
                     <th></th>
                 </tr>
             </thead>
@@ -46,14 +48,16 @@
                         foreach (var calendarItem in calendarItems)
                         {
                             if (!IsVisible(calendarItem))
-                                continue;
+                               continue;
                     <tr>
                         <td>@calendarItem.Day</td>
                         <td>@calendarItem.Time</td>
                         <td>@calendarItem.ProductName</td>
                         <td>@calendarItem.Quantity</td>
                         <td>@calendarItem.EnergyValue</td>
-
+                        <td>
+                            <button class="btn btn-danger" @onclick="() => deleteCalendarItem(calendarItem.ProductId, calendarItem.Day, calendarItem.Time)">Delete</button>
+                        </td>
                     </tr>
                         }
                 }
@@ -74,12 +78,8 @@
             <select @bind="newCalendarItem.ProductId">
                 @foreach (var product in products)
                     {
-                <option value="@product.Id">@product.Name </option>
-                    }
-                @foreach(var dish in dishes)
-                    {
-                <option value="@dish.Id"> @dish.Name</option>
-                    }
+                <option value="@product.ProductId">@product.Name </option>
+                    }  
             </select>
             <div class="col">
                 <input type="text" class="form-control" placeholder="Quantity" aria-label="Quantity" @bind="@newCalendarItem.Quantity">
@@ -97,42 +97,51 @@
     public string Email { get; set; }
     private int UserId { get; set; }
     public string Filter { get; set; }
-    public List<CalendarItem>
-    calendarItems { get; set; }
-    private List<Product>
-        products { get; set; }
-        private List<Product>
-            allproducts { get; set; }
-            private List<DishModel>
-                dishes {get; set;}
+    public List<CalendarItem> calendarItems { get; set; }
+    private List<FridgeItem> products { get; set; }
+    private List<Product> allProducts {get; set;}
+    private List<Product> edible {get; set;}
+    private List<DishModel> dishes {get;set;}
+    private DateTime newDate { get; set; }
+    public string productName;
 
-                private DateTime newDate { get; set; }
-                public string productName;
+    public CalendarItem newCalendarItem = new CalendarItem();
+    public static PagedResponse<List<Product>> response { get; set; }
+    public delegate bool CheckValidity(CalendarItem item);
 
-                public CalendarItem newCalendarItem = new CalendarItem();
-                public static PagedResponse<List<Product>> response { get; set; }
-
-    public bool IsVisible(CalendarItem Item)
+    public bool IsVisible(CalendarItem item)
     {
-    return true;
-
+    CheckValidity checking = delegate(CalendarItem item)
+    {
+    return string.IsNullOrEmpty(Filter) ||
+    item.ProductName.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+    item.Day.Contains(Filter, StringComparison.OrdinalIgnoreCase) ||
+    item.Time.Contains(Filter, StringComparison.OrdinalIgnoreCase);
+    };
+    return checking(item);
     }
     protected override async Task OnInitializedAsync()
     {
-    response = await ProductService.GetResponse();
-    UserId = await RegistrationService.GetUserId(Email);
-    calendarItems = (CalendarService.GetCalendarItemsUser(UserId));
-    allproducts = (await ProductService.GetAllProducts(response.TotalRecords));
-    products = ProductService.GetEdibleProducts(allproducts);
-    dishes = await RecipeCalcService.GetRecipes();
-    newDate = DateTime.Now;
+        response = await ProductService.GetResponse();
+        UserId = await RegistrationService.GetUserId(Email);
+        calendarItems = (CalendarService.GetCalendarItemsUser(UserId));
+        products = await FridgeService.GetFridgeItemForCalendar(UserId);
+        allProducts = (await ProductService.GetAllProducts(response.TotalRecords));
+        dishes = await RecipeCalcService.GetRecipes();
+        edible = ProductService.GetEdibleProducts(allProducts);
+        newDate = DateTime.Now;
     }
     public async Task addCalendarItem()
     {
     newCalendarItem.Day = newDate.ToShortDateString();
-    CalendarService.AddCalendarItem(UserId, newCalendarItem, products, dishes);
+    CalendarService.AddCalendarItem(UserId, newCalendarItem, edible,dishes);
     calendarItems = CalendarService.GetCalendarItemsUser(UserId);
     newCalendarItem = new CalendarItem();
     newDate = DateTime.Now;
+    }
+    public void deleteCalendarItem(int productId, string day, string time)
+    {
+    CalendarService.DeleteCalendarItem(UserId, productId, day, time);
+    calendarItems.RemoveAll(item => item.ProductId == productId && item.UserId == UserId && item.Day == day && item.Time == time);
     }
     }
