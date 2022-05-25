@@ -66,6 +66,7 @@ namespace Tests
             var allProducts = productService.GetAllProducts(250).Result;
             var allDishes = dishesService.GetRecipes().Result;
 
+
             CalendarItem newCalendarItem = new CalendarItem
             {
                 ProductName = "Test",
